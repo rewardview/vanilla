@@ -1,7 +1,34 @@
 
 import './styles.css'
 
+var addButton = document.getElementById('btnAdd')
+addButton.addEventListener('click', handleClickAddButton)
 
+function handleClickAddButton() {
+  var todoTextInput = document.getElementsByClassName('text-basic')
+  var todoText = todoTextInput.item(0).value
+
+  var listBody = document.getElementById('listBody')
+
+  var newList = document.createElement('tr')
+  var newInputTd = document.createElement('td')
+
+  var newInput = document.createElement('input')
+  newInput.type = 'checkbox'
+  newInput.class = 'btn-chk'
+
+  var newTextTd = document.createElement('td')
+  var textNode = document.createTextNode(todoText)
+  newTextTd.appendChild(textNode)
+
+  newInputTd.appendChild(newInput)
+
+  newList.appendChild(newInputTd)
+  newList.appendChild(newTextTd)
+
+  listBody.appendChild(newList)
+  todoTextInput.item(0).value = ''
+}
 
 
 

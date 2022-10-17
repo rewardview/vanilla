@@ -13,6 +13,25 @@ btnDelLast.addEventListener('click', handleClickDelLast)
 var btnDelAll = document.getElementById('btnDelAll')
 btnDelAll.addEventListener('click', handleClickDelAll)
 
+
+var table = document.getElementById('list-table')
+var tbody = table.querySelector('tbody');
+
+document.addEventListener('mousedown', mouseDownHandler);
+document.addEventListener('mousemove', mouseMoveHandler);
+document.addEventListener('mouseup', mouseUpHandler);
+
+
+var dragFlag = false,
+  mouseDownX = 0,
+  mouseDownY = 0,
+  mouseX = 0,
+  mouseY = 0,
+  currRow = null;
+
+
+document.global = { table }
+
 function handleClickAddButton() {
   var todoTextInput = document.getElementsByClassName('text-basic')
   var todoText = todoTextInput.item(0).value
@@ -66,4 +85,62 @@ function handleClickDelAll() {
   for (let index = checkedBox.length - 1; index >= 0; index--) {
     listBody.deleteRow(index)
   }
+}
+
+function mouseDownHandler(event) {
+  var row = getTrTarget(event)
+  if (row) {
+    currRow = row
+    document.global.currRow = currRow
+    mouseDownY = event.clientY;
+    dragFlag = true
+  }
+}
+
+function mouseMoveHandler(event) {
+  if (!dragFlag) return
+  mouseY = event.clientY - mouseDownY;
+  var curPosition = currRow.getBoundingClientRect()
+  var currStartY = curPosition.y, currEndY = curPosition.y + curPosition.height
+  var rows = table.querySelectorAll('tbody tr');
+
+  for (var i = 0; i < rows.length; i++) {
+    let rowElem = rows[i],
+      rowSize = rowElem.getBoundingClientRect(),
+      rowStartY = rowSize.y, rowEndY = rowStartY + rowSize.height;
+    if (currRow !== rowElem && isIntersecting(currStartY, currEndY, rowStartY, rowEndY)) {
+
+      console.log(Math.abs(mouseY));
+
+      if (Math.abs(mouseY) < rowSize.height / 2) {
+        swapRow(rowElem, i);
+      }
+    }
+  }
+
+}
+
+function mouseUpHandler(event) {
+  currRow = null
+  dragFlag = false
+}
+
+function getTrTarget(event) {
+  if (event) {
+    if (event.target.nodeName.toLowerCase() === 'td') return event.target.closest('tr')
+    if (event.target.nodeName.toLowerCase() === 'tr') return event.target
+  }
+}
+
+function isIntersecting(min0, max0, min1, max1) {
+  return max0 >= min1 &&
+    min0 <= max1;
+}
+
+function swapRow(row, index) {
+
+  let currIndex = Array.from(tbody.children).indexOf(currRow),
+    row1 = currIndex > index ? currRow : row,
+    row2 = currIndex > index ? row : currRow;
+  tbody.insertBefore(row1, row2);
 }

@@ -105,7 +105,7 @@ function mouseDownHandler(event) {
 }
 
 function mouseMoveHandler(event) {
-  //test
+  //test222
   if (!dragFlag) return
   var table = document.getElementById('list-table')
   var tbody = table.querySelector('tbody');

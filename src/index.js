@@ -14,9 +14,6 @@ var btnDelAll = document.getElementById('btnDelAll')
 btnDelAll.addEventListener('click', handleClickDelAll)
 
 
-var table = document.getElementById('list-table')
-var tbody = table.querySelector('tbody');
-
 document.addEventListener('mousedown', mouseDownHandler);
 document.addEventListener('mousemove', mouseMoveHandler);
 document.addEventListener('mouseup', mouseUpHandler);
@@ -30,7 +27,7 @@ var dragFlag = false,
   currRow = null;
 
 
-document.global = { table }
+document.global = {}
 
 function handleClickAddButton() {
   var todoTextInput = document.getElementsByClassName('text-basic')
@@ -90,15 +87,28 @@ function handleClickDelAll() {
 function mouseDownHandler(event) {
   var row = getTrTarget(event)
   if (row) {
+
+    var table = document.getElementById('list-table')
+    var rows = table.querySelectorAll('tbody tr');
+
+    rows.forEach((e, k, node) => {
+      debugger
+    })
+
     currRow = row
     document.global.currRow = currRow
+
+
     mouseDownY = event.clientY;
     dragFlag = true
   }
 }
 
 function mouseMoveHandler(event) {
+  //test
   if (!dragFlag) return
+  var table = document.getElementById('list-table')
+  var tbody = table.querySelector('tbody');
   mouseY = event.clientY - mouseDownY;
   var curPosition = currRow.getBoundingClientRect()
   var currStartY = curPosition.y, currEndY = curPosition.y + curPosition.height
